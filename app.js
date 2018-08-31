@@ -1,23 +1,18 @@
 const app = angular.module('app', [])
-app.controller('MyController', function ($scope) {
-    $scope.hello = 'Hello, AngularJS'
-})
 
-app.directive('hello1', function () {
-    return {
-        restrict: 'A',
-        priority: 1,
-        controller: function ($scope) {
-            $scope.hello += ' (hello111) '
+function helloDirective(name, priority, terminal) {
+    return function () {
+        return {
+            priority: priority,
+            terminal: terminal,
+            link: function () {
+                console.log('--------- ' + name + ' (priority: ' + priority + ', terminal: ' + terminal + ') ---------')
+            }
         }
     }
-})
-app.directive('hello2', function () {
-    return {
-        restrict: 'A',
-        priority: 2,
-        controller: function ($scope) {
-            $scope.hello += ' (hello222) '
-        }
-    }
-})
+}
+
+app.directive('hello1', helloDirective('hello1', 1, false))
+app.directive('hello2a', helloDirective('hello2', 2, true))
+app.directive('hello2b', helloDirective('hello2b', 2, false))
+app.directive('hello3', helloDirective('hello3', 3, false))
